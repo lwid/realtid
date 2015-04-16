@@ -35,12 +35,10 @@ data = json.load(urllib2.urlopen(url))
 # Concat the scrolling message
 msg=""
 for train in data['ResponseData']['Trains']:
-#  for (k, v) in train.items():
-#    print k, v
-#  print "====================="
-#  print "%s, %s (%s)" % (train['Destination'], train['DisplayTime'], train['Deviations'])
   msg+= "%s (SL) " % (train['DisplayTime'])
 
+for dev in data['ResponseData']['StopPointDeviations']:
+  msg+=dev['Deviation']['Text']
 
 ###################################
 
@@ -60,20 +58,20 @@ for d in data['RESPONSE']['RESULT'][0]['TrainAnnouncement']:
 
 #############################
 
-a=config.get('SL2', 'Url')
-b=config.get('SL2', 'Key')
-c=config.getint('SL2', 'siteid')
-d=config.get('SL2', 'TransportMode')
-e=config.getint('SL2', 'LineNumber')
-url = "%s?key=%s&siteid=%s&LineNumber=%s&TransportMode=%s" % (a,b,c,e,d)
+#a=config.get('SL2', 'Url')
+#b=config.get('SL2', 'Key')
+#c=config.getint('SL2', 'siteid')
+#d=config.get('SL2', 'TransportMode')
+#e=config.getint('SL2', 'LineNumber')
+#url = "%s?key=%s&siteid=%s&LineNumber=%s&TransportMode=%s" % (a,b,c,e,d)
 
 # Fetch data from SL
-data = json.load(urllib2.urlopen(url))
+#data = json.load(urllib2.urlopen(url))
 
 # Concat the scrolling message
-for d in data['ResponseData']:
+#for d in data['ResponseData']:
   #print d['Header']
-  msg+= d['Header']
+  #msg+= d['Header']
 
 #############################
 
