@@ -19,6 +19,17 @@ dev = config.get('DISPLAY','SerialPort')
 speed = config.get('DISPLAY','SerialSpeed')
 ser = serial.Serial(dev, speed)
 
+#########################
+
+# Setup a list of departures which we can populate from
+# multiple sources before sorting
+deps=[]
+
+# A list of information messages
+msgs=[]
+
+
+#########################
 
 ########################
 
@@ -33,12 +44,12 @@ url = "%s?key=%s&siteid=%s&TimeWindow=%s" % (a,b,c,d)
 data = json.load(urllib2.urlopen(url))
 
 # Concat the scrolling message
-msg=""
 for train in data['ResponseData']['Trains']:
-  msg+= "%s (SL) " % (train['DisplayTime'])
+  t=dateutil.parser.parse(train['DisplayTime'])
+  deps.append([t, "SL"])
 
 for dev in data['ResponseData']['StopPointDeviations']:
-  msg+=dev['Deviation']['Text']
+  msgs.append(dev['Deviation']['Text'])
 
 ###################################
 
@@ -54,7 +65,7 @@ xml='<REQUEST> <LOGIN authenticationkey="%s" /> <QUERY objecttype="TrainAnnounce
 data = json.load(urllib2.urlopen(urllib2.Request(url=url, data=xml, headers={'Content-Type': 'text/xml'})))
 for d in data['RESPONSE']['RESULT'][0]['TrainAnnouncement']:
   t=dateutil.parser.parse(d['AdvertisedTimeAtLocation'])
-  msg += "%s (SJ) " % (t.strftime("%H:%M"))
+  deps.append([t, "SJ"])
 
 #############################
 
@@ -74,6 +85,13 @@ for d in data['RESPONSE']['RESULT'][0]['TrainAnnouncement']:
   #msg+= d['Header']
 
 #############################
+
+# Build the message string
+msg=""
+for dep in sorted(deps, key=lambda d: d[0]):
+  msg+="%s (%s) " % (dep[0].strftime("%H:%M"), dep[1])
+for m in msgs:
+  msg+=m
 
 # Normalize the unicode into plain ASCII (the display /can/ handle Unicode, TBD...)
 msg=unicodedata.normalize('NFKD', msg).encode('ascii','ignore')
