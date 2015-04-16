@@ -51,7 +51,7 @@ key=config.get('SJ', 'Key')
 loc=config.get('SJ', 'Loc')
 dst=config.get('SJ', 'Dst')
 
-xml='<REQUEST> <LOGIN authenticationkey="%s" /> <QUERY objecttype="TrainAnnouncement" orderby="AdvertisedTimeAtLocation"> <FILTER> <AND> <EQ name="ActivityType" value="Avgang" /> <EQ name="LocationSignature" value="%s" /> <EQ name="InformationOwner" value="SJ" /> <LIKE name="ToLocation" value="/%s/" /> <OR> <AND> <GT name="AdvertisedTimeAtLocation" value="$dateadd(-00:15:00)" /> <LT name="AdvertisedTimeAtLocation" value="$dateadd(14:00:00)" /> </AND> <AND> <LT name="AdvertisedTimeAtLocation" value="$dateadd(00:30:00)" /> <GT name="EstimatedTimeAtLocation" value="$dateadd(-00:15:00)" /> </AND> </OR> </AND> </FILTER> <INCLUDE>AdvertisedTrainIdent</INCLUDE> <INCLUDE>AdvertisedTimeAtLocation</INCLUDE> <INCLUDE>TrackAtLocation</INCLUDE> <INCLUDE>ToLocation</INCLUDE> </QUERY> </REQUEST>' % (key, loc, dst)
+xml='<REQUEST> <LOGIN authenticationkey="%s" /> <QUERY objecttype="TrainAnnouncement" orderby="AdvertisedTimeAtLocation"> <FILTER> <AND> <EQ name="ActivityType" value="Avgang" /> <EQ name="LocationSignature" value="%s" /> <EQ name="InformationOwner" value="SJ" /> <LIKE name="ToLocation" value="/%s/" /> <OR> <AND> <GT name="AdvertisedTimeAtLocation" value="$dateadd(-00:05:00)" /> <LT name="AdvertisedTimeAtLocation" value="$dateadd(02:00:00)" /> </AND> <AND> <LT name="AdvertisedTimeAtLocation" value="$dateadd(02:00:00)" /> <GT name="EstimatedTimeAtLocation" value="$dateadd(-00:05:00)" /> </AND> </OR> </AND> </FILTER> <INCLUDE>AdvertisedTrainIdent</INCLUDE> <INCLUDE>AdvertisedTimeAtLocation</INCLUDE> <INCLUDE>TrackAtLocation</INCLUDE> <INCLUDE>ToLocation</INCLUDE> </QUERY> </REQUEST>' % (key, loc, dst)
 
 data = json.load(urllib2.urlopen(urllib2.Request(url=url, data=xml, headers={'Content-Type': 'text/xml'})))
 for d in data['RESPONSE']['RESULT'][0]['TrainAnnouncement']:
@@ -72,7 +72,7 @@ data = json.load(urllib2.urlopen(url))
 
 # Concat the scrolling message
 for d in data['ResponseData']:
-  print d['Header']
+  #print d['Header']
   msg+= d['Header']
 
 #############################
