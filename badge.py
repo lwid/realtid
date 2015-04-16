@@ -1,3 +1,5 @@
+# Adopted from https://github.com/ghewgill/ledbadge
+
 import struct
 
 ACTION_HOLD = 'A'
